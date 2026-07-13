@@ -1,0 +1,13 @@
+把三个cfg文件解压到steam\steamapps\common\Counter-Strike Global Offensive\game\csgo\cfg
+
+启动游戏后，在进入服务器之前exec CS2VNL即可
+
+主要功能：desubtick的jump / jumpbug / CJ
+
+下滚轮使用jumpbug和CJ（大跳）
+
+exec后默认为JB mode
+
+默认侧键mouse4是切换JB和CJ
+
+切换时会有音效提示

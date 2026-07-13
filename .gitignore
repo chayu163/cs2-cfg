@@ -1,0 +1,18 @@
+# 默认忽略所有
+*
+
+# 保留 gitignore
+!.gitignore
+
+# 保留 cfg 目录
+!cfg/
+
+# cfg 下默认全部忽略
+cfg/*
+
+# 保留 autoexec
+!cfg/autoexec.cfg
+
+# 保留 config 整个目录
+!cfg/config/
+!cfg/config/**
