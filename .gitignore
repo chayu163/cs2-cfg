@@ -3,8 +3,11 @@
 
 # 保留 gitignore
 !.gitignore
+!README.md
 
-# 保留 cfg 目录
+# 保留 cfg / assets 目录
+!assets
+!assets/**
 !cfg/
 
 # cfg 下默认全部忽略
