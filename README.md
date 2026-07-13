@@ -37,14 +37,14 @@
 
 5. 在底部的**启动选项**中添加以下指令：
    ```text
-   -promptperfectworld -coop_fullscreen -nojoy -novid -tickrate 128 +exec main.cfg
+   -promptperfectworld -coop_fullscreen -nojoy -novid -tickrate 128 +exec config/main.cfg
    
    -promptperfectworld  # 强制手动选择服务器
    -coop_fullscreen     # 全屏窗口化
    -nojoy               # 移除手柄支持
    -novid               # 跳过开场动画
    -tickrate 128        # 设置本地游戏采样速率128tick
-   +exec main.cfg       # 执行主配置文件（必须）
+   +exec config/main.cfg       # 执行主配置文件（必须）
    ```
    
 6. 启动游戏
@@ -63,13 +63,6 @@
 | **`solo`** | 切换至单挑对决模式 |
 | **`solo_help`** | 单挑对决模式帮助 |
 | **`demo`** | 切换至看录像配置   |
-
-### 💡 特殊帮助菜单
-为了防止忘记按键，我在跑图和单挑模块内设计了控制台专用的排版菜单。
-- 处在跑图模式时，控制台输入 **`ptinfo`** 即可呼出包含全按键的跑图功能表。
-- 处在单挑模式时，控制台输入 **`soloinfo`** 即可呼出所有武器发枪与环境按键大全。
-
-*(其他大量跑图操作如：时间加速、回溯道具、添加/踢出机器人等均罗列在 `ptinfo` 的内部菜单中。)*
 
 ------
 
