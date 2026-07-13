@@ -19,9 +19,11 @@
 | 文件名 | 描述 | 包含内容 |
 | :--- | :--- | :--- |
 | **`cfg\config\main.cfg`** | 主要配置 | 准星、优化参数、常用键位映射 |
+| **`cfg\config\modules\*.cfg`** | 主要配置子模块 ||
 | **`cfg\config\pt.cfg`** | 跑图练习 | 开启作弊、无限道具、轨迹显示 |
 | **`cfg\config\solo.cfg`** | 单挑模式 | 武器库替换、发枪逻辑、热身设定 |
 | **`cfg\config\demo.cfg`** | 录像复盘 | Demo 观战专用优化 |
+| **`cfg\config\VNL\*.cfg`** | VNL binds | 官匹身法bind |
 | **`cfg\config\*_help.cfg`** | UI 支持 | 自制控制台双列格式对齐菜单 |
 
 ---
