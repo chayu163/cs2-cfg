@@ -37,7 +37,7 @@
 
 5. 在底部的**启动选项**中添加以下指令：
    ```text
-   -promptperfectworld -coop_fullscreen -nojoy -novid -tickrate 128 +exec config/main.cfg
+   -promptperfectworld -coop_fullscreen -nojoy -novid -tickrate 128 +exec config/main.cfg -disable_workshop_command_filtering
    
    -promptperfectworld  # 强制手动选择服务器
    -coop_fullscreen     # 全屏窗口化
@@ -45,6 +45,7 @@
    -novid               # 跳过开场动画
    -tickrate 128        # 设置本地游戏采样速率128tick
    +exec config/main.cfg       # 执行主配置文件（必须）
+   -disable_workshop_command_filtering  # 支持创意工坊地图执行cfg
    ```
    
 6. 启动游戏
@@ -101,6 +102,9 @@ git pull
 > **建议：** 每完成一项功能优化或配置调整后及时提交一次，便于回溯历史版本，也能避免误修改导致配置丢失。
 
 ---
-> 📅 **最后更新:** 2026-07-14  
+> 📅 **最后更新:** 2026-08-3  
 > 🏷 **备注:** 纯自用精简版本。移除了大量冗余。
 
+### 收录一些资源站：
+
+https://csdb.gg/
