@@ -108,3 +108,5 @@ git pull
 ### 收录一些资源站：
 
 https://csdb.gg/
+
+https://mbsifu.com/library/game/cs2/command
