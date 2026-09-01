@@ -4,6 +4,9 @@
 # 保留 gitignore
 !.gitignore
 !README.md
+!README.en.md
+!CLAUDE.md
+!AGENTS.md
 
 # 保留 cfg / assets 目录
 !assets
