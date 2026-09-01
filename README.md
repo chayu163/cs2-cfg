@@ -9,6 +9,8 @@
 ![Config](https://img.shields.io/badge/Format-.cfg-555?style=for-the-badge)
 ![Personal](https://img.shields.io/badge/Status-personal%20use-blueviolet?style=for-the-badge)
 
+</div>
+
 覆盖**日常匹配、跑图训练、单挑对决、录像复盘、KZ 跑酷**五种场景的 .cfg 配置合集，以"文件为中心"为核心设计——一个文件夹囊括个人配置，控制台随意尝试bind，一个命令回滚。
 
 ---
@@ -125,9 +127,7 @@ cfg/
 ```
 
 <div align="center">
-
-[![CS2 CFG Architecture](https://img.shields.io/badge/CS2-CFG%20ARCHITECTURE-f5a300?style=for-the-badge&logo=files&logoColor=white&labelColor=1a1a1a)](./assets/architecture.html)
-
+  <img src="assets/架构图.png" alt="CS2 CFG 架构图"/>
 </div>
 
 ---
@@ -189,6 +189,9 @@ cfg/
 1. 新增模式元配置：在 `cfg/config/` 下创建新 .cfg（参考 `pt.cfg` 结构）
 2. 增加模式指令：在 `modules/4_binds.cfg` 末尾加 `alias <name> "exec config/<name>"`
 3. 在 `main.cfg` 末尾的菜单 `echo` 区说明
+4. 同步更新键位图（`assets/键位图.png`），保持与新 bind 一致
+
+> 键位全景见[参考章节的键位图](#键位图)。
 
 ---
 
@@ -198,6 +201,12 @@ cfg/
 - [mbsifu.com CS2 Command Library](https://mbsifu.com/library/game/cs2/command) — 控制台指令大全
 - [config.upup.cool](https://config.upup.cool/v2/) — 买枪代码生成
 - [Purple-CSGO/CS2-Config-Presets](https://github.com/Purple-CSGO/CS2-Config-Presets) — 上游方案
+
+### 键位图
+
+<div align="center">
+  <img src="assets/键位图.png" alt="CS2 CFG 键位图"/>
+</div>
 
 ---
 
