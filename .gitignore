@@ -8,6 +8,9 @@
 !CLAUDE.md
 !AGENTS.md
 
+# 保留 mise 版本配置
+!mise.toml
+
 # 保留 cfg / assets 目录
 !assets
 !assets/**
@@ -22,3 +25,9 @@ cfg/*
 # 保留 config 整个目录
 !cfg/config/
 !cfg/config/**
+
+# 保留 GitHub Pages 网站源码（Vite + React）
+!site/
+!site/**
+site/node_modules/
+site/dist/

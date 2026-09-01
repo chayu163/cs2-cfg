@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS2 CFG 架构图</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+      background: #fafafa;
+      color: #0f172a;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .region {
+      border-radius: 14px;
+      padding: 20px;
+      border: 2px dashed;
+    }
+
+    .region.base {
+      background: rgba(219, 234, 254, 0.20);
+      border-color: #2563eb;
+    }
+
+    .region.mode {
+      background: rgba(237, 233, 254, 0.20);
+      border-color: #7c3aed;
+    }
+
+    .region-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .region.base .region-title { color: #2563eb; }
+    .region.mode .region-title { color: #7c3aed; }
+
+    .file-box {
+      background: #ffffff;
+      border: 2px solid;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+
+    .file-box.gray { border-color: #475569; background: #f1f5f9; }
+    .file-box.blue { border-color: #2563eb; background: #dbeafe; }
+    .file-box.amber { border-color: #d97706; background: #fef3c7; }
+    .file-box.green { border-color: #16a34a; background: #ffffff; }
+    .file-box.violet { border-color: #7c3aed; background: #ede9fe; }
+    .file-box.help { border-color: #94a3b8; background: #f1f5f9; border-style: dashed; }
+
+    .file-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .file-subtitle {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 2px;
+    }
+
+    .file-detail {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .file-detail.amber { color: #d97706; font-weight: 600; }
+    .file-detail.violet { color: #7c3aed; font-weight: 600; }
+
+    .arrow-down {
+      text-align: center;
+      color: #475569;
+      font-size: 16px;
+      margin: -2px 0;
+      line-height: 1;
+    }
+
+    .arrow-down.green { color: #16a34a; }
+    .arrow-down.amber { color: #d97706; }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: rgba(220, 252, 231, 0.30);
+      border: 2px dashed #16a34a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .module-cell {
+      background: #ffffff;
+      border: 1.5px solid #16a34a;
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .module-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .module-role {
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .modules-grid-wide {
+      grid-column: span 3;
+      border-style: dashed;
+      background: #ffffff;
+    }
+
+    .modes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .divider {
+      border-top: 1px dashed #cbd5e1;
+      margin: 8px 0;
+    }
+
+    .vnl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .vnl-cell {
+      background: #ffffff;
+      border: 1.5px solid #d97706;
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .vnl-cell.wide { grid-column: span 2; border-style: dashed; }
+
+    .vnl-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .vnl-role {
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #475569;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .legend {
+      margin-top: 20px;
+      padding: 12px 18px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-swatch {
+      width: 16px;
+      height: 12px;
+      border-radius: 2px;
+      border: 1.5px solid;
+    }
+
+    .legend-swatch.gray { background: #f1f5f9; border-color: #475569; }
+    .legend-swatch.blue { background: #dbeafe; border-color: #2563eb; }
+    .legend-swatch.green { background: #ffffff; border-color: #16a34a; }
+    .legend-swatch.amber { background: #fef3c7; border-color: #d97706; }
+    .legend-swatch.violet { background: #ede9fe; border-color: #7c3aed; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">架构图</div>
+
+    <div class="grid">
+
+      <!-- ============== Left: 基础栈 ============== -->
+      <div class="region base">
+        <div class="region-title">config/main.cfg</div>
+
+        <div class="file-box gray">
+          <div class="file-name">autoexec.cfg</div>
+          <div class="file-subtitle">游戏启动时自动加载配置</div>
+          <div class="file-detail"></div>
+        </div>
+
+        <div class="arrow-down">↓ exec config/main</div>
+
+        <div class="file-box blue">
+          <div class="file-name">main.cfg</div>
+          <div class="file-subtitle">日常匹配的整套配置</div>
+          <div class="file-detail">鼠标/准星/键位/买枪 全在这里</div>
+        </div>
+
+        <div class="arrow-down green">↓ exec modules/*</div>
+
+        <div class="modules-grid">
+          <div class="module-cell">
+            <div class="module-name">0_network</div>
+            <div class="module-role">网络/帧</div>
+          </div>
+          <div class="module-cell">
+            <div class="module-name">1_mouse</div>
+            <div class="module-role">鼠标</div>
+          </div>
+          <div class="module-cell">
+            <div class="module-name">2_crosshair</div>
+            <div class="module-role">准星/持枪</div>
+          </div>
+          <div class="module-cell">
+            <div class="module-name">3_video</div>
+            <div class="module-role">亮度</div>
+          </div>
+          <div class="module-cell">
+            <div class="module-name">4_binds</div>
+            <div class="module-role">键位/alias</div>
+          </div>
+          <div class="module-cell">
+            <div class="module-name">5_buy</div>
+            <div class="module-role">买枪</div>
+          </div>
+          <div class="module-cell modules-grid-wide">
+            <div class="module-name">6_basic · 7_audio · 8_hud</div>
+            <div class="module-role">FPS/语音 · 音量/EQ · 雷达/HUD 缩放</div>
+          </div>
+        </div>
+
+        <div class="arrow-down green">↓ exec VNL/movement</div>
+
+        <div class="file-box amber">
+          <div class="file-name">VNL/movement.cfg</div>
+          <div class="file-subtitle">A/D 公共移动 alias</div>
+          <div class="file-detail">身法的前置依赖（防止 Insta-Strafe 卡住）</div>
+        </div>
+
+        <div class="note">main.cfg 不引用右侧场景模式</div>
+      </div>
+
+      <!-- ============== Right: 场景模式 + VNL ============== -->
+      <div class="region mode">
+        <div class="region-title">config/ — 场景模式（与 main 并列）</div>
+        <div class="note" style="margin-top: -8px; margin-bottom: 12px;">由 4_binds.cfg 提供切换 alias，运行时由玩家输入触发</div>
+
+        <div class="modes-grid">
+          <div class="file-box violet">
+            <div class="file-name">pt.cfg</div>
+            <div class="file-detail violet">跑图训练</div>
+            <div class="file-detail">开作弊 / 无限子弹 / 投掷物预览</div>
+            <div class="file-detail" style="font-style: italic;">alias: pt · pt_help</div>
+          </div>
+          <div class="file-box violet">
+            <div class="file-name">solo.cfg</div>
+            <div class="file-detail violet">单挑对决</div>
+            <div class="file-detail">武器库别名 / 快速切枪</div>
+            <div class="file-detail" style="font-style: italic;">alias: solo · solo_help</div>
+          </div>
+          <div class="file-box violet">
+            <div class="file-name">demo.cfg</div>
+            <div class="file-detail violet">录像复盘</div>
+            <div class="file-detail">demoui / 播放速度齿轮 / 录屏预设</div>
+            <div class="file-detail" style="font-style: italic;">alias: demo</div>
+          </div>
+          <div class="file-box violet">
+            <div class="file-name">kz.cfg</div>
+            <div class="file-detail violet">KZ 跑酷</div>
+            <div class="file-detail">存点 / 计时 / 回放 / 夜视仪</div>
+            <div class="file-detail" style="font-style: italic;">alias: kz</div>
+          </div>
+        </div>
+
+        <div class="file-box help">
+          <div class="file-name" style="font-size: 16px;">帮助菜单（仅 echo，无执行逻辑）</div>
+          <div class="file-detail">pt_help.cfg · solo_help.cfg · pt_knife.cfg</div>
+        </div>
+
+        <div class="vnl-grid">
+          <div class="vnl-cell">
+            <div class="vnl-name">cj 系列</div>
+            <div class="vnl-role">CJ 大跳（无旋/左旋/右旋）</div>
+          </div>
+          <div class="vnl-cell">
+            <div class="vnl-name">j 系列</div>
+            <div class="vnl-role">普通跳跃（无旋/左旋/右旋）</div>
+          </div>
+          <div class="vnl-cell">
+            <div class="vnl-name">jb</div>
+            <div class="vnl-role">滚轮 JumpBug</div>
+          </div>
+          <div class="vnl-cell">
+            <div class="vnl-name">test · deprecated/</div>
+            <div class="vnl-role">测试占位 / 历史配置（不加载）</div>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top: 12px;">
+          触发键：MWHEELDOWN · 命名规范：*a 左旋 / *d 右旋 · 详见 VNL/README.md
+        </div>
+        <div class="note">场景模式与 VNL 身法都不在 main.cfg 引用链中</div>
+      </div>
+    </div>
+
+    <!-- ============== Legend ============== -->
+    <div class="legend">
+      <span style="font-weight: 700;">Legend</span>
+      <span class="legend-item"><span class="legend-swatch gray"></span>入口</span>
+      <span class="legend-item"><span class="legend-swatch blue"></span>主配置中枢</span>
+      <span class="legend-item"><span class="legend-swatch green"></span>modules 子模块</span>
+      <span class="legend-item"><span class="legend-swatch amber"></span>VNL 配置</span>
+      <span class="legend-item"><span class="legend-swatch violet"></span>场景模式</span>
+    </div>
+  </div>
+</body>
+</html>
