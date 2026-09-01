@@ -95,6 +95,7 @@ flowchart TD
 ```
 .
 ├── README.md / README.en.md           # 双语 README（中文为默认入口）
+├── LICENSE                              # GPL-3.0 许可证
 ├── mise.toml                          # mise 运行时配置：node = "22.23.1"
 ├── assets/                            # 静态资源（架构图、键位图）
 ├── cfg/                               # 游戏配置（复制到 game\csgo\cfg\ 使用）
@@ -250,6 +251,7 @@ mise exec npm run build  # 生产构建（输出 dist/）
 仓库采用白名单式 `.gitignore`，仅跟踪以下内容：
 
 - `README.md` / `README.en.md`
+- `LICENSE`
 - `mise.toml`
 - `assets/**`
 - `cfg/autoexec.cfg` / `cfg/config/**`
@@ -260,3 +262,13 @@ mise exec npm run build  # 生产构建（输出 dist/）
 ```bash
 git add . && git commit -m "描述本次修改" && git push
 ```
+
+---
+
+## ![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)
+
+本项目采用 [GNU General Public License v3.0](LICENSE)。
+
+Copyright © 2026 CS2 CFG Preset contributors
+
+SPDX-License-Identifier: GPL-3.0-only

@@ -17,6 +17,7 @@
 ├── .gitignore                             # 白名单式忽略规则（默认全忽略，按需放行）
 ├── CLAUDE.md                              # Claude Code 专属，@AGENTS.md 继承本文件
 ├── AGENTS.md                              # 项目级 agent 指令
+├── LICENSE                                 # GPL-3.0 许可证
 ├── README.md                              # 中文 README（默认入口）
 ├── README.en.md                           # 英文 README
 ├── mise.toml                              # mise 运行时配置：node = "22.23.1"
@@ -128,6 +129,7 @@ mise exec npm run build  # 生产构建（输出 dist/，不提交）
 ### gitignore 规则
 `.gitignore` 默认全忽略，仅跟踪：
 - `README.md` / `README.en.md`
+- `LICENSE`
 - `assets/**`
 - `cfg/autoexec.cfg`
 - `cfg/config/**`

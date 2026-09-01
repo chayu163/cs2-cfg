@@ -97,6 +97,7 @@ flowchart TD
 ```
 .
 ├── README.md / README.en.md            # Bilingual README (Chinese is the default entry)
+├── LICENSE                              # GPL-3.0 license
 ├── mise.toml                           # mise runtime config: node = "22.23.1"
 ├── assets/                             # Static assets (architecture diagram, keymap)
 ├── cfg/                                # Game config (copy into game\csgo\cfg\)
@@ -252,6 +253,7 @@ Examples: jump-throw, double-key bunny hop, nade crosshair, quick bomb drop — 
 The repo uses an allowlist `.gitignore` and only tracks:
 
 - `README.md` / `README.en.md`
+- `LICENSE`
 - `mise.toml`
 - `assets/**`
 - `cfg/autoexec.cfg` / `cfg/config/**`
@@ -262,6 +264,16 @@ Auto-generated `.cfg` files, demos, caches, and the site's dependencies/build ou
 ```bash
 git add . && git commit -m "describe the change" && git push
 ```
+
+---
+
+## ![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
+Copyright © 2026 CS2 CFG Preset contributors
+
+SPDX-License-Identifier: GPL-3.0-only
 
 ---
 
