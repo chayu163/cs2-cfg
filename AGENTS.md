@@ -83,9 +83,9 @@
 
 ```bash
 cd site
-mise exec npm ci
-mise exec npm run dev    # 本地预览
-mise exec npm run build  # 生产构建（输出 dist/，不提交）
+mise exec -- npm ci
+mise exec -- npm run dev    # 本地预览
+mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
 ```
 
 **CS2 启动项（README 第 39-49 行）**：
@@ -148,7 +148,7 @@ mise exec npm run build  # 生产构建（输出 dist/，不提交）
 - **更新键位图**：替换 `assets/键位图.png`，README 末尾的 `<img>` 引用会自动取新图
 - **网站页面/文案**：改 `site/src/App.jsx`（含中英双语切换逻辑与文案）
 - **网站样式/动效**：改 `site/src/styles.css`
-- **网站静态资源**：放 `site/src/assets/`；构建用 `mise exec npm run build`，产物 `site/dist/` 不提交
+- **网站静态资源**：放 `site/src/assets/`；构建用 `mise exec -- npm run build`，产物 `site/dist/` 不提交
 
 ## Boundaries
 

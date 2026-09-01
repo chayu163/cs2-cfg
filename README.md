@@ -161,9 +161,9 @@ cfg/
 
 ```bash
 cd site
-mise exec npm ci
-mise exec npm run dev    # 本地预览
-mise exec npm run build  # 生产构建（输出 dist/）
+mise exec -- npm ci
+mise exec -- npm run dev    # 本地预览
+mise exec -- npm run build  # 生产构建（输出 dist/）
 ```
 
 ---

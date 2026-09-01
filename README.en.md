@@ -163,9 +163,9 @@ cfg/
 
 ```bash
 cd site
-mise exec npm ci
-mise exec npm run dev    # Local preview
-mise exec npm run build  # Production build (outputs dist/)
+mise exec -- npm ci
+mise exec -- npm run dev    # Local preview
+mise exec -- npm run build  # Production build (outputs dist/)
 ```
 
 ---
