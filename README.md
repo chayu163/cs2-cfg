@@ -3,7 +3,7 @@
   #  CS2 CFG Preset
   ### 一个模块化、以文件为中心的 CS2 配置方案
 
-[![CS2 CFG Preset](https://img.shields.io/badge/CS2-CFG%20Preset-f5a300?style=for-the-badge&logo=counterstrike&logoColor=white&labelColor=1a1a1a)](https://github.com/chayu/cs2-cfg)
+[![CS2 CFG Preset](https://img.shields.io/badge/CS2-CFG%20Preset-f5a300?style=for-the-badge&logo=counterstrike&logoColor=white&labelColor=1a1a1a)](https://github.com/chayu163/cs2-cfg)
 ![Steam](https://img.shields.io/badge/Steam-1b2838?style=for-the-badge&logo=steam&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078d4?style=for-the-badge&logo=windows&logoColor=white)
 ![Config](https://img.shields.io/badge/Format-.cfg-555?style=for-the-badge)
@@ -30,7 +30,7 @@
 
 1. **定位目录**：Steam → 右键 CS2 → 管理 → 浏览本地文件 → 进入 `game\csgo\`
 
-2. **应用配置**：将本仓库的 `cfg/` 目录内容复制到 `game\csgo\cfg\` 下（`assets/` 和根 `README.md` 不需要）
+2. **应用配置**：将本仓库的 `cfg/` 目录内容复制到 `game\csgo\cfg\` 下（`assets/`、`site/` 和根 README 文件不需要）
 
 3. **设置推荐启动项**：Steam → 右键 CS2 → 属性 → 通用 → 启动选项：
 
@@ -93,6 +93,26 @@ flowchart TD
 ## ![Structure](https://img.shields.io/badge/Structure-项目结构-475569?style=for-the-badge)
 
 ```
+.
+├── README.md / README.en.md           # 双语 README（中文为默认入口）
+├── mise.toml                          # mise 运行时配置：node = "22.23.1"
+├── assets/                            # 静态资源（架构图、键位图）
+├── cfg/                               # 游戏配置（复制到 game\csgo\cfg\ 使用）
+└── site/                              # 独立 React + Vite 欢迎页/文档站（不参与游戏加载）
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    └── src/
+        ├── App.jsx
+        ├── main.jsx
+        ├── styles.css
+        └── assets/
+```
+
+其中 `cfg/` 的详细结构如下：
+
+```
 cfg/
 ├── autoexec.cfg                       # 入口：定义全局 alias 后 exec config/main
 └── config/
@@ -131,6 +151,19 @@ cfg/
 <div align="center">
   <img src="assets/架构图.png" alt="CS2 CFG 架构图"/>
 </div>
+
+---
+
+## ![Site](https://img.shields.io/badge/Site-网站-0f6fbd?style=for-the-badge)
+
+`site/` 是独立的 React 19 + Vite 欢迎页与文档站，提供中英双语切换；它不参与游戏配置加载，单独开发、构建和部署。
+
+```bash
+cd site
+mise exec npm ci
+mise exec npm run dev    # 本地预览
+mise exec npm run build  # 生产构建（输出 dist/）
+```
 
 ---
 
@@ -214,7 +247,15 @@ cfg/
 
 ## ![Versioning](https://img.shields.io/badge/Versioning-版本管理-15803d?style=for-the-badge) 
 
-仓库仅跟踪 `cfg/autoexec.cfg`、`cfg/config/**`、`assets/**`、`README.md`。游戏自动生成的 .cfg、录像、缓存不会入库。
+仓库采用白名单式 `.gitignore`，仅跟踪以下内容：
+
+- `README.md` / `README.en.md`
+- `mise.toml`
+- `assets/**`
+- `cfg/autoexec.cfg` / `cfg/config/**`
+- `site/**`（排除 `site/node_modules/`、`site/dist/`）
+
+游戏自动生成的 .cfg、录像、缓存，以及网站依赖和构建产物都不会入库。`cfg/config/VNL/deprecated/` 通过 `**` 隐式跟踪（保留历史参考）。
 
 ```bash
 git add . && git commit -m "描述本次修改" && git push

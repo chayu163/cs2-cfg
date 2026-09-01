@@ -5,7 +5,7 @@
   #  CS2 CFG Preset
   ### A modular, file-centric CS2 config preset
 
-[![CS2 CFG Preset](https://img.shields.io/badge/CS2-CFG%20Preset-f5a300?style=for-the-badge&logo=counterstrike&logoColor=white&labelColor=1a1a1a)](https://github.com/chayu/cs2-cfg)
+[![CS2 CFG Preset](https://img.shields.io/badge/CS2-CFG%20Preset-f5a300?style=for-the-badge&logo=counterstrike&logoColor=white&labelColor=1a1a1a)](https://github.com/chayu163/cs2-cfg)
 ![Steam](https://img.shields.io/badge/Steam-1b2838?style=for-the-badge&logo=steam&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078d4?style=for-the-badge&logo=windows&logoColor=white)
 ![Config](https://img.shields.io/badge/Format-.cfg-555?style=for-the-badge)
@@ -30,7 +30,7 @@ A curated `.cfg` preset covering **daily match, practice, 1v1 duels, demo review
 
 1. **Locate the folder**: Steam → right-click CS2 → Manage → Browse local files → enter `game\csgo\`.
 
-2. **Apply the preset**: Copy the `cfg/` directory of this repo into `game\csgo\cfg\` (you don't need `assets/` or the root `README.md`).
+2. **Apply the preset**: Copy the `cfg/` directory of this repo into `game\csgo\cfg\` (you don't need `assets/`, `site/`, or the root README files).
 
 3. **Set the recommended launch options**: Steam → right-click CS2 → Properties → General → Launch options:
 
@@ -95,6 +95,26 @@ flowchart TD
 ## ![Structure](https://img.shields.io/badge/Structure-Project%20Layout-475569?style=for-the-badge)
 
 ```
+.
+├── README.md / README.en.md            # Bilingual README (Chinese is the default entry)
+├── mise.toml                           # mise runtime config: node = "22.23.1"
+├── assets/                             # Static assets (architecture diagram, keymap)
+├── cfg/                                # Game config (copy into game\csgo\cfg\)
+└── site/                               # Standalone React + Vite welcome/doc site (not loaded by CS2)
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    └── src/
+        ├── App.jsx
+        ├── main.jsx
+        ├── styles.css
+        └── assets/
+```
+
+The detailed `cfg/` layout is shown below:
+
+```
 cfg/
 ├── autoexec.cfg                       # Entry: defines global aliases, then exec config/main
 └── config/
@@ -133,6 +153,19 @@ cfg/
 <div align="center">
   <img src="assets/架构图.png" alt="CS2 CFG Architecture"/>
 </div>
+
+---
+
+## ![Site](https://img.shields.io/badge/Site-Website-0f6fbd?style=for-the-badge)
+
+`site/` is a standalone React 19 + Vite welcome and documentation site with bilingual Chinese/English support. It is not loaded by the game, and is developed, built, and deployed separately.
+
+```bash
+cd site
+mise exec npm ci
+mise exec npm run dev    # Local preview
+mise exec npm run build  # Production build (outputs dist/)
+```
 
 ---
 
@@ -216,7 +249,15 @@ Examples: jump-throw, double-key bunny hop, nade crosshair, quick bomb drop — 
 
 ## ![Versioning](https://img.shields.io/badge/Versioning-Versioning-15803d?style=for-the-badge) 
 
-The repo only tracks `cfg/autoexec.cfg`, `cfg/config/**`, `assets/**`, `README.md`, `README.en.md`. Auto-generated `.cfg`, demos, and caches are ignored.
+The repo uses an allowlist `.gitignore` and only tracks:
+
+- `README.md` / `README.en.md`
+- `mise.toml`
+- `assets/**`
+- `cfg/autoexec.cfg` / `cfg/config/**`
+- `site/**` (excluding `site/node_modules/`, `site/dist/`)
+
+Auto-generated `.cfg` files, demos, caches, and the site's dependencies/build output never enter version control. `cfg/config/VNL/deprecated/` is implicitly tracked via `**` and retained for historical reference.
 
 ```bash
 git add . && git commit -m "describe the change" && git push
