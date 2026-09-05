@@ -119,7 +119,7 @@ cfg/
 ├── autoexec.cfg                       # 入口：定义全局 alias 后 exec config/main
 └── config/
     ├── main.cfg                       # 基础配置：唯一加载清单（settings → shared → binds → VNL）+ 输出菜单
-    ├── shared.cfg                     # 跨模式公共 alias
+    ├── shared.cfg                     # 预留位：当前为空（模式自有 alias 就近定义）
     │
     │  ── main 常驻加载的子目录 ──
     │
@@ -177,7 +177,7 @@ mise exec -- npm run build  # 生产构建（输出 dist/）
 
 ## ![Commands](https://img.shields.io/badge/Commands-快捷指令-7c3aed?style=for-the-badge)
 
-**`main` 是基础模式**（日常匹配用，聚合 `settings/` 常驻设置、`shared.cfg` 公共 alias、`binds/` 键位与 VNL 基础配置）。其他模式都是它的覆盖层——选一个加载覆盖即可。
+**`main` 是基础模式**（日常匹配用，聚合 `settings/` 常驻设置、`binds/` 键位与 VNL 基础配置）。其他模式都是它的覆盖层——选一个加载覆盖即可，各模式的 alias/键位**就近自有**，不做跨模式提取。
 
 **场景模式**（覆盖 main）：
 

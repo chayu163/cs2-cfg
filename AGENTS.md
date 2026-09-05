@@ -29,7 +29,7 @@
 │   ├── autoexec.cfg                       # 入口：定义全局 alias 后 exec config/main
 │   └── config/
 │       ├── main.cfg                       # 主流：唯一加载清单（settings → shared → binds → VNL）+ 输出菜单
-│       ├── shared.cfg                     # 跨模式公共 alias（+nClip/-nClip）
+│       ├── shared.cfg                     # 预留位：当前为空（模式自有 alias 就近定义在各模式 cfg 内）
 │       ├── settings/                      # 常驻设置（加载顺序由 main.cfg 决定）
 │       │   ├── network.cfg                # 网络/帧数据遥测
 │       │   ├── mouse.cfg                  # 鼠标灵敏度/视角
@@ -109,7 +109,7 @@ mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
 
 ### 加载链
 1. `autoexec.cfg` 定义 `+pwaswitchknife` / `refundall` alias，再 `exec config/main`
-2. `main.cfg` 是唯一加载清单：依次 `exec` `config/settings/` 7 个常驻设置 → `config/shared.cfg`（跨模式公共 alias）→ `config/binds/` 4 个键位文件（keys/buy/utility/loaders）→ `config/VNL/movement.cfg`，最后输出控制台菜单（加载顺序以 `main.cfg` 为唯一真源）
+2. `main.cfg` 是唯一加载清单：依次 `exec` `config/settings/` 7 个常驻设置 → `config/shared.cfg`（预留位，当前为空）→ `config/binds/` 4 个键位文件（keys/buy/utility/loaders）→ `config/VNL/movement.cfg`，最后输出控制台菜单（加载顺序以 `main.cfg` 为唯一真源）
 3. 模式 cfg（`config/modes/` 下的 `pt`/`solo`/`demo`/`kz` 等）互相独立，通过 `config/binds/loaders.cfg` 定义的 alias 在控制台/键位调用
 
 ### 切换模式的实现

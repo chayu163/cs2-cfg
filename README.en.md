@@ -121,7 +121,7 @@ cfg/
 ├── autoexec.cfg                       # Entry: defines global aliases, then exec config/main
 └── config/
     ├── main.cfg                       # Base preset: single load manifest (settings → shared → binds → VNL) + menu output
-    ├── shared.cfg                     # Cross-mode shared aliases
+    ├── shared.cfg                     # Reserved placeholder (empty; modes own their aliases)
     │
     │  ── Subfolders loaded permanently by main ──
     │
@@ -179,7 +179,7 @@ mise exec -- npm run build  # Production build (outputs dist/)
 
 ## ![Commands](https://img.shields.io/badge/Commands-Quick%20Commands-7c3aed?style=for-the-badge)
 
-**`main` is the base mode** (used for daily matches; aggregates the `settings/` permanent configs, the `shared.cfg` aliases, the `binds/` key layers, and the VNL baseline). The other modes are overlay layers — pick one to load on top.
+**`main` is the base mode** (used for daily matches; aggregates the `settings/` permanent configs, the `binds/` key layers, and the VNL baseline). The other modes are overlay layers — pick one to load on top; each mode owns its full set of aliases/binds inline rather than extracting them into shared files.
 
 **Scenario modes** (overlay `main`):
 
