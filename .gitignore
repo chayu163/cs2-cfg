@@ -27,6 +27,10 @@ cfg/*
 !cfg/config/
 !cfg/config/**
 
+# 保留设计文档（superpowers specs）
+!docs/
+!docs/**
+
 # 保留 GitHub Pages 网站源码（Vite + React）
 !site/
 !site/**
