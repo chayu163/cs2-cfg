@@ -28,24 +28,29 @@
 ├── cfg/                                   # 游戏配置（被 .gitignore 白名单跟踪）
 │   ├── autoexec.cfg                       # 入口：定义全局 alias 后 exec config/main
 │   └── config/
-│       ├── main.cfg                       # 主流：exec 加载所有 modules/* + VNL/movement + 输出菜单
-│       ├── kz.cfg                         # KZ 模式：跑酷计时、存点、回放、夜视仪
-│       ├── pt.cfg                         # 跑图练习：sv_cheats 1 + 无限子弹 + 投掷物预览
-│       ├── solo.cfg                       # 单挑模式：武器库 alias + 热身设定
-│       ├── demo.cfg                       # 录像复盘：demoui、播放速度齿轮、录屏预设
-│       ├── pt_knife.cfg                   # 跑图子模式：k数字 换刀
-│       ├── pt_help.cfg                    # 跑图 ASCII 双栏菜单
-│       ├── solo_help.cfg                  # solo 双栏菜单
-│       ├── modules/                       # 主配置子模块（编号 0~8，按 main.cfg 顺序加载）
-│       │   ├── 0_network_framedata.cfg    # 网络/帧数据遥测
-│       │   ├── 1_mouse.cfg                # 鼠标灵敏度/视角
-│       │   ├── 2_crosshair_viewmodel.cfg  # 准星 + 持枪视角（主控）
-│       │   ├── 3_video.cfg                # 亮度
-│       │   ├── 4_binds.cfg                # 键位 + VNL/PT/solo 切换 alias + 投掷物准星
-│       │   ├── 5_buy.cfg                  # 快速买枪（半甲沙鹰 / 全甲烟闪）
-│       │   ├── 6_basic.cfg                # 控制台、FPS、语音、击杀预测、教学
-│       │   ├── 7_audio.cfg                # 音量、耳机 EQ、透视校正
-│       │   └── 8_hud.cfg                  # 队伍颜色、雷达、HUD 缩放
+│       ├── main.cfg                       # 主流：唯一加载清单（settings → shared → binds → VNL）+ 输出菜单
+│       ├── shared.cfg                     # 跨模式公共 alias（+nClip/-nClip）
+│       ├── settings/                      # 常驻设置（加载顺序由 main.cfg 决定）
+│       │   ├── network.cfg                # 网络/帧数据遥测
+│       │   ├── mouse.cfg                  # 鼠标灵敏度/视角
+│       │   ├── crosshair_viewmodel.cfg    # 准星 + 持枪视角（主控）
+│       │   ├── video.cfg                  # 亮度
+│       │   ├── basic.cfg                  # 控制台、FPS、击杀预测、教学
+│       │   ├── audio.cfg                  # 音量、耳机 EQ、透视校正
+│       │   └── hud.cfg                    # 队伍颜色、雷达、HUD 缩放
+│       ├── binds/                         # 键位层
+│       │   ├── keys.cfg                   # 纯键位绑定（含 Insert/Delete 加载 main/pt）
+│       │   ├── buy.cfg                    # 快速买枪（半甲沙鹰 / 全甲烟闪）
+│       │   ├── utility.cfg                # 实用功能键位（跳投、双键大跳、投掷物准星、快速扔包）
+│       │   └── loaders.cfg                # 配置加载器：main/pt/solo/demo/kz 切换 alias + VNL 切换 alias
+│       ├── modes/                         # 模式全家桶（互相独立，覆盖 main）
+│       │   ├── pt.cfg                     # 跑图练习：sv_cheats 1 + 无限子弹 + 投掷物预览
+│       │   ├── solo.cfg                   # 单挑模式：武器库 alias + 热身设定
+│       │   ├── demo.cfg                   # 录像复盘：demoui、播放速度齿轮、录屏预设
+│       │   ├── kz.cfg                     # KZ 模式：跑酷计时、存点、回放、夜视仪
+│       │   ├── pt_knife.cfg               # 跑图子模式：k数字 换刀
+│       │   ├── pt_help.cfg                # 跑图 ASCII 双栏菜单
+│       │   └── solo_help.cfg              # solo 双栏菜单
 │       └── VNL/                           # VNL Movement Bind（KZ/身法用）
 │           ├── README.md                  # 维护原则、目录结构、命名规范
 │           ├── VNL_Bind_大全_中文整理.md  # 来源资料中文整理
@@ -63,6 +68,7 @@
 │               ├── CS2VNL.cfg
 │               ├── jb.cfg
 │               └── nulls.cfg
+├── docs/                                  # 设计文档与实施计划（superpowers specs/plans，被 .gitignore 放行）
 └── site/                                  # 独立 React + Vite 欢迎页/文档站（不参与游戏加载）
     ├── index.html
     ├── package.json
@@ -97,17 +103,17 @@ mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
 - `main` / `pt` / `solo` / `demo` / `pt_help` / `solo_help` 加载对应配置
 - `cj` / `cja` / `cjd` / `j` / `ja` / `jd` / `jb` / `vnltest` 加载 VNL 移动 bind
 - `kz` 加载 KZ 模式
-- **Insert 键**：加载 `main.cfg`；**Delete 键**：加载 `pt.cfg`
+- **Insert 键**：加载 `config/main.cfg`；**Delete 键**：加载 `config/modes/pt.cfg`
 
 ## 关键架构约定
 
 ### 加载链
 1. `autoexec.cfg` 定义 `+pwaswitchknife` / `refundall` alias，再 `exec config/main`
-2. `main.cfg` 依次 `exec` 9 个 `modules/N_*.cfg`（按数字编号 0~8 决定加载顺序），最后 `exec config/VNL/movement.cfg`
-3. 模式 cfg（`pt`/`solo`/`demo`/`kz`）互相独立，通过 alias 在控制台/键位调用
+2. `main.cfg` 是唯一加载清单：依次 `exec` `config/settings/` 7 个常驻设置 → `config/shared.cfg`（跨模式公共 alias）→ `config/binds/` 4 个键位文件（keys/buy/utility/loaders）→ `config/VNL/movement.cfg`，最后输出控制台菜单（加载顺序以 `main.cfg` 为唯一真源）
+3. 模式 cfg（`config/modes/` 下的 `pt`/`solo`/`demo`/`kz` 等）互相独立，通过 `config/binds/loaders.cfg` 定义的 alias 在控制台/键位调用
 
 ### 切换模式的实现
-每个模式 cfg 末尾都通过 `echo` 输出 ASCII 艺术标题 + 指令/键位对照表（双栏使用 `┏┇┗╋` Unicode 制表字符）。`pt_help.cfg` / `solo_help.cfg` / `pt_knife.cfg` 单独提供更详细的双栏菜单（仅 `echo`，无执行逻辑）。
+每个模式 cfg（`cfg/config/modes/` 下）末尾都通过 `echo` 输出 ASCII 艺术标题 + 指令/键位对照表（双栏使用 `┏┇┗╋` Unicode 制表字符）。`modes/pt_help.cfg` / `modes/solo_help.cfg` / `modes/pt_knife.cfg` 单独提供更详细的双栏菜单（仅 `echo`，无执行逻辑）。
 
 ### VNL Bind 体系（KZ 身法核心）
 - **触发键**：全部 `MWHEELDOWN`（鼠标下滚轮）
@@ -117,7 +123,7 @@ mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
   - `j*` = 普通跳跃系列
   - `jb*` = JumpBug（独立）
   - `*a` / `*d` 后缀 = 左旋 / 右旋（Insta-Strafe）
-- **`movement.cfg` 始终先于 VNL 子配置加载**（由 `main.cfg` 第 15 行保证）
+- **`movement.cfg` 始终先于 VNL 子配置加载**（由 `main.cfg` 的加载顺序保证：`binds/` 全部加载完才 `exec config/VNL/movement.cfg`）
 - **详见 `cfg/config/VNL/README.md`** 的维护原则
 
 ### 命名/格式约定
@@ -135,15 +141,16 @@ mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
 - `cfg/config/**`
 - `mise.toml`
 - `site/**`（排除 `site/node_modules/`、`site/dist/`）
+- `docs/**`（设计文档与实施计划）
 - `CLAUDE.md` / `AGENTS.md`（项目级上下文文档，与代码同步入库）
 
 游戏自动生成的 .cfg、录像、缓存，以及网站的依赖和构建产物都不会进版本库。`cfg/config/VNL/deprecated/` 通过 `**` 隐式跟踪（保留历史参考）。
 
 ## 常见改动任务
 
-- **新增模式 cfg**（如 prefire / retake）：在 `cfg/config/` 下建文件，`main.cfg` 加一行 `echo 指令名 描述"路径.cfg"`，并在 `4_binds.cfg` 末尾加对应 `alias`
-- **调整准星/持枪**：只改 `modules/2_crosshair_viewmodel.cfg`（demo 模式有独立准星在 `demo.cfg` 第 60-87 行）
-- **新增买枪绑定**：在 `modules/5_buy.cfg` 加 `bind`，参考 https://config.upup.cool/v2/ 的购买代码
+- **新增模式 cfg**（如 prefire / retake）：在 `cfg/config/modes/` 下建文件，`main.cfg` 加一行 `echo 指令名 描述"路径.cfg"`，并在 `cfg/config/binds/loaders.cfg` 加对应 `alias`
+- **调整准星/持枪**：只改 `cfg/config/settings/crosshair_viewmodel.cfg`（demo 模式有独立准星，在 `cfg/config/modes/demo.cfg` 的「demo专用准星」段）
+- **新增买枪绑定**：在 `cfg/config/binds/buy.cfg` 加 `bind`，参考 https://config.upup.cool/v2/ 的购买代码
 - **修改 VNL bind**：先读 `cfg/config/VNL/README.md` 维护原则，再动对应 .cfg；改完跑 `vnltest` 验证（test.cfg 当前是空文件）
 - **更新键位图**：替换 `assets/键位图.png`，README 末尾的 `<img>` 引用会自动取新图
 - **网站页面/文案**：改 `site/src/App.jsx`（含中英双语切换逻辑与文案）
@@ -154,6 +161,6 @@ mise exec -- npm run build  # 生产构建（输出 dist/，不提交）
 
 - **不**改 `autoexec.cfg` 的 `exec config/main`（这是固定入口）
 - **不**删 `cfg/config/VNL/deprecated/` 内容（保留为历史参考）
-- **不**在 `pt_help.cfg` / `solo_help.cfg` / `pt_knife.cfg` 加执行逻辑（这些文件只负责 `echo` 菜单）
-- **不**把模块的 `exec` 顺序搞乱（modules/ 编号 0~8 的顺序由 `main.cfg` 第 4-12 行固化，0 在前 8 在后）
+- **不**在 `cfg/config/modes/` 的 `pt_help.cfg` / `solo_help.cfg` / `pt_knife.cfg` 加执行逻辑（这些文件只负责 `echo` 菜单）
+- **不**把 `main.cfg` 的 `exec` 顺序搞乱（settings → shared → binds → VNL/movement 的加载顺序以 `main.cfg` 为唯一真源）
 - **不**向 `cfg/` 游戏配置层加构建系统/lint/test；`site/` 的 Vite 构建保留，但 `site/dist/`、`site/node_modules/` 不提交

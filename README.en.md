@@ -101,6 +101,7 @@ flowchart TD
 ├── mise.toml                           # mise runtime config: node = "22.23.1"
 ├── assets/                             # Static assets (architecture diagram, keymap)
 ├── cfg/                                # Game config (copy into game\csgo\cfg\)
+├── docs/                               # Design docs & implementation plans (superpowers specs/plans)
 └── site/                               # Standalone React + Vite welcome/doc site (not loaded by CS2)
     ├── index.html
     ├── package.json
@@ -119,28 +120,34 @@ The detailed `cfg/` layout is shown below:
 cfg/
 ├── autoexec.cfg                       # Entry: defines global aliases, then exec config/main
 └── config/
-    ├── main.cfg                       # Base preset: aggregates modules/* and VNL/movement
+    ├── main.cfg                       # Base preset: single load manifest (settings → shared → binds → VNL) + menu output
+    ├── shared.cfg                     # Cross-mode shared aliases
+    │
+    │  ── Subfolders loaded permanently by main ──
+    │
+    ├── settings/                      # Permanent settings (load order decided by main.cfg)
+    │   ├── network.cfg                # Network / frame data
+    │   ├── mouse.cfg                  # Mouse sensitivity
+    │   ├── crosshair_viewmodel.cfg    # Crosshair / viewmodel
+    │   ├── video.cfg                  # Brightness
+    │   ├── basic.cfg                  # Console, FPS and other basics
+    │   ├── audio.cfg                  # Volume / headphone EQ
+    │   └── hud.cfg                    # Radar / HUD scale
+    │
+    ├── binds/                         # Bind layer
+    │   ├── keys.cfg                   # General key binds
+    │   ├── buy.cfg                    # Quick buy
+    │   ├── utility.cfg                # Utility binds (jump-throw, double-key jump…)
+    │   └── loaders.cfg                # Switch aliases for main/pt/solo/demo/kz
     │
     │  ── Scenario modes (overlay main; reset with main before switching) ──
     │
-    ├── pt.cfg / pt_knife.cfg          # Practice
-    ├── solo.cfg                       # 1v1 Duel
-    ├── demo.cfg                       # Demo review
-    ├── kz.cfg                         # KZ mode
-    ├── pt_help.cfg / solo_help.cfg    # pt/solo help
-    │
-    │  ── Subfolders referenced by main ──
-    │
-    ├── modules/                       # Base submodules (numeric prefix 0~8 controls load order)
-    │   ├── 0_network_framedata.cfg
-    │   ├── 1_mouse.cfg
-    │   ├── 2_crosshair_viewmodel.cfg
-    │   ├── 3_video.cfg
-    │   ├── 4_binds.cfg                # Switch aliases for main/pt/solo/demo/kz
-    │   ├── 5_buy.cfg
-    │   ├── 6_basic.cfg
-    │   ├── 7_audio.cfg
-    │   └── 8_hud.cfg
+    ├── modes/                         # All mode cfgs
+    │   ├── pt.cfg / pt_knife.cfg      # Practice
+    │   ├── solo.cfg                   # 1v1 Duel
+    │   ├── demo.cfg                   # Demo review
+    │   ├── kz.cfg                     # KZ mode
+    │   └── pt_help.cfg / solo_help.cfg # pt/solo help
     │
     └── VNL/                           # VNL binds (KZ / movement tech)
         ├── README.md                  # Maintenance principles
@@ -172,7 +179,7 @@ mise exec -- npm run build  # Production build (outputs dist/)
 
 ## ![Commands](https://img.shields.io/badge/Commands-Quick%20Commands-7c3aed?style=for-the-badge)
 
-**`main` is the base mode** (used for daily matches; aggregates every `modules/*` and the VNL baseline). The other modes are overlay layers — pick one to load on top.
+**`main` is the base mode** (used for daily matches; aggregates the `settings/` permanent configs, the `shared.cfg` aliases, the `binds/` key layers, and the VNL baseline). The other modes are overlay layers — pick one to load on top.
 
 **Scenario modes** (overlay `main`):
 
@@ -202,17 +209,17 @@ mise exec -- npm run build  # Production build (outputs dist/)
 
 | What                | File                                 |
 | ------------------- | ------------------------------------ |
-| Mouse sensitivity   | `modules/1_mouse.cfg`                |
-| Crosshair / viewmodel | `modules/2_crosshair_viewmodel.cfg` |
-| Volume / EQ         | `modules/7_audio.cfg`                |
-| Radar / HUD scale   | `modules/8_hud.cfg`                  |
-| Buy binds           | `modules/5_buy.cfg`                  |
-| General binds       | `modules/4_binds.cfg`                |
-| Practice            | `pt.cfg`                             |
-| 1v1                 | `solo.cfg` (append `alias`)          |
-| Demo                | `gear_*` aliases in `demo.cfg`       |
-| KZ                  | `kz.cfg`                             |
-| VNL                 | `VNL/*.cfg` (see `VNL/README.md`)    |
+| Mouse sensitivity   | `config/settings/mouse.cfg`               |
+| Crosshair / viewmodel | `config/settings/crosshair_viewmodel.cfg` |
+| Volume / EQ         | `config/settings/audio.cfg`               |
+| Radar / HUD scale   | `config/settings/hud.cfg`                 |
+| Buy binds           | `config/binds/buy.cfg`                    |
+| General binds       | `config/binds/keys.cfg`                   |
+| Practice            | `config/modes/pt.cfg`                     |
+| 1v1                 | `config/modes/solo.cfg` (append `alias`)  |
+| Demo                | `gear_*` aliases in `config/modes/demo.cfg` |
+| KZ                  | `config/modes/kz.cfg`                     |
+| VNL                 | `config/VNL/*.cfg` (see `config/VNL/README.md`) |
 
 **After editing, type `main` in the console to reload, and update the matching help when applicable (e.g. `pt` / `pt_help`).**
 
@@ -220,12 +227,12 @@ mise exec -- npm run build  # Production build (outputs dist/)
 
 A few settings live behind `//` comments. Delete the leading `//` to enable.
 
-Examples: jump-throw, double-key bunny hop, nade crosshair, quick bomb drop — all live in `modules/4_binds.cfg`.
+Examples: jump-throw, double-key bunny hop, nade crosshair, quick bomb drop — all live in `config/binds/utility.cfg`.
 
 ### Add a new mode
 
-1. Create a new `.cfg` under `cfg/config/` (mirror the structure of `pt.cfg`).
-2. Add the command alias at the end of `modules/4_binds.cfg`: `alias <name> "exec config/<name>"`.
+1. Create a new `.cfg` under `cfg/config/modes/` (mirror the structure of `pt.cfg`).
+2. Add the command alias in `config/binds/loaders.cfg`: `alias <name> "exec config/modes/<name>"`.
 3. Echo it from the menu in `main.cfg`.
 4. Update the keymap (`assets/键位图.png`) to keep it in sync.
 
@@ -257,6 +264,7 @@ The repo uses an allowlist `.gitignore` and only tracks:
 - `mise.toml`
 - `assets/**`
 - `cfg/autoexec.cfg` / `cfg/config/**`
+- `docs/**` (design docs & implementation plans)
 - `site/**` (excluding `site/node_modules/`, `site/dist/`)
 
 Auto-generated `.cfg` files, demos, caches, and the site's dependencies/build output never enter version control. `cfg/config/VNL/deprecated/` is implicitly tracked via `**` and retained for historical reference.

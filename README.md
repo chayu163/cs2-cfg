@@ -99,6 +99,7 @@ flowchart TD
 ├── mise.toml                          # mise 运行时配置：node = "22.23.1"
 ├── assets/                            # 静态资源（架构图、键位图）
 ├── cfg/                               # 游戏配置（复制到 game\csgo\cfg\ 使用）
+├── docs/                              # 设计文档与实施计划（superpowers specs/plans）
 └── site/                              # 独立 React + Vite 欢迎页/文档站（不参与游戏加载）
     ├── index.html
     ├── package.json
@@ -117,28 +118,34 @@ flowchart TD
 cfg/
 ├── autoexec.cfg                       # 入口：定义全局 alias 后 exec config/main
 └── config/
-    ├── main.cfg                       # 基础配置：聚合 modules/* 与 VNL/movement
+    ├── main.cfg                       # 基础配置：唯一加载清单（settings → shared → binds → VNL）+ 输出菜单
+    ├── shared.cfg                     # 跨模式公共 alias
+    │
+    │  ── main 常驻加载的子目录 ──
+    │
+    ├── settings/                      # 常驻设置（加载顺序由 main.cfg 决定）
+    │   ├── network.cfg                # 网络/帧数据
+    │   ├── mouse.cfg                  # 鼠标灵敏度
+    │   ├── crosshair_viewmodel.cfg    # 准星 / 持枪视角
+    │   ├── video.cfg                  # 亮度
+    │   ├── basic.cfg                  # 控制台、FPS 等基础设置
+    │   ├── audio.cfg                  # 音量 / 耳机 EQ
+    │   └── hud.cfg                    # 雷达 / HUD 缩放
+    │
+    ├── binds/                         # 键位层
+    │   ├── keys.cfg                   # 通用键位
+    │   ├── buy.cfg                    # 快速买枪
+    │   ├── utility.cfg                # 实用功能键位（跳投、双键大跳等）
+    │   └── loaders.cfg                # 含 main/pt/solo/demo/kz 切换 alias
     │
     │  ── 场景模式（覆盖 main，切换前先 main 重置） ──
     │
-    ├── pt.cfg / pt_knife.cfg          # 跑图训练
-    ├── solo.cfg                       # 单挑对决
-    ├── demo.cfg                       # 录像复盘
-    ├── kz.cfg                         # KZ 模式
-    ├── pt_help.cfg / solo_help.cfg    # pt/solo帮助
-    │
-    │  ── main 引用的子目录 ──
-    │
-    ├── modules/                       # 主配置子模块（编号 0~8 决定加载顺序）
-    │   ├── 0_network_framedata.cfg
-    │   ├── 1_mouse.cfg
-    │   ├── 2_crosshair_viewmodel.cfg
-    │   ├── 3_video.cfg
-    │   ├── 4_binds.cfg                # 含 main/pt/solo/demo/kz 切换 alias
-    │   ├── 5_buy.cfg
-    │   ├── 6_basic.cfg
-    │   ├── 7_audio.cfg
-    │   └── 8_hud.cfg
+    ├── modes/                         # 模式全家桶
+    │   ├── pt.cfg / pt_knife.cfg      # 跑图训练
+    │   ├── solo.cfg                   # 单挑对决
+    │   ├── demo.cfg                   # 录像复盘
+    │   ├── kz.cfg                     # KZ 模式
+    │   └── pt_help.cfg / solo_help.cfg # pt/solo帮助
     │
     └── VNL/                           # VNL Bind（KZ/身法）
         ├── README.md                  # 维护原则
@@ -170,7 +177,7 @@ mise exec -- npm run build  # 生产构建（输出 dist/）
 
 ## ![Commands](https://img.shields.io/badge/Commands-快捷指令-7c3aed?style=for-the-badge)
 
-**`main` 是基础模式**（日常匹配用，聚合所有 modules/* 与 VNL 基础配置）。其他模式都是它的覆盖层——选一个加载覆盖即可。
+**`main` 是基础模式**（日常匹配用，聚合 `settings/` 常驻设置、`shared.cfg` 公共 alias、`binds/` 键位与 VNL 基础配置）。其他模式都是它的覆盖层——选一个加载覆盖即可。
 
 **场景模式**（覆盖 main）：
 
@@ -200,17 +207,17 @@ mise exec -- npm run build  # 生产构建（输出 dist/）
 
 | 改什么          | 编辑文件                            |
 | --------------- | ----------------------------------- |
-| 鼠标灵敏度      | `modules/1_mouse.cfg`               |
-| 准星 / 持枪视角 | `modules/2_crosshair_viewmodel.cfg` |
-| 音量 / 耳机 EQ  | `modules/7_audio.cfg`               |
-| 雷达 / HUD 缩放 | `modules/8_hud.cfg`                 |
-| 买枪绑定        | `modules/5_buy.cfg`                 |
-| 通用键位        | `modules/4_binds.cfg`               |
-| 跑图            | `pt.cfg`                            |
-| 单挑            | `solo.cfg`（追加 `alias`）          |
-| Demo            | `demo.cfg` 中的 `gear_*` alias      |
-| KZ              | `kz.cfg`                            |
-| VNL             | `VNL/*.cfg`（详见 `VNL/README.md`） |
+| 鼠标灵敏度      | `config/settings/mouse.cfg`               |
+| 准星 / 持枪视角 | `config/settings/crosshair_viewmodel.cfg` |
+| 音量 / 耳机 EQ  | `config/settings/audio.cfg`               |
+| 雷达 / HUD 缩放 | `config/settings/hud.cfg`                 |
+| 买枪绑定        | `config/binds/buy.cfg`                    |
+| 通用键位        | `config/binds/keys.cfg`                   |
+| 跑图            | `config/modes/pt.cfg`                     |
+| 单挑            | `config/modes/solo.cfg`（追加 `alias`）   |
+| Demo            | `config/modes/demo.cfg` 中的 `gear_*` alias |
+| KZ              | `config/modes/kz.cfg`                     |
+| VNL             | `config/VNL/*.cfg`（详见 `config/VNL/README.md`） |
 
 **改完记得在控制台 输入 main 进行重载以及尽量更新模式对应的帮助，例如 `pt/pt_help` **。
 
@@ -218,12 +225,12 @@ mise exec -- npm run build  # 生产构建（输出 dist/）
 
 一些设置默认以 `//` 注释存在，删除行首 `//` 即可启用。
 
-例如跳投、双键大跳、投掷物准星、快速扔包等（位于 `modules/4_binds.cfg`）。
+例如跳投、双键大跳、投掷物准星、快速扔包等（位于 `config/binds/utility.cfg`）。
 
 ### 新增一个模式
 
-1. 新增模式元配置：在 `cfg/config/` 下创建新 .cfg（参考 `pt.cfg` 结构）
-2. 增加模式指令：在 `modules/4_binds.cfg` 末尾加 `alias <name> "exec config/<name>"`
+1. 新增模式元配置：在 `cfg/config/modes/` 下创建新 .cfg（参考 `pt.cfg` 结构）
+2. 增加模式指令：在 `config/binds/loaders.cfg` 加 `alias <name> "exec config/modes/<name>"`
 3. 在 `main.cfg` 末尾的菜单 `echo` 区说明
 4. 同步更新键位图（`assets/键位图.png`），保持与新 bind 一致
 
@@ -255,6 +262,7 @@ mise exec -- npm run build  # 生产构建（输出 dist/）
 - `mise.toml`
 - `assets/**`
 - `cfg/autoexec.cfg` / `cfg/config/**`
+- `docs/**`（设计文档与实施计划）
 - `site/**`（排除 `site/node_modules/`、`site/dist/`）
 
 游戏自动生成的 .cfg、录像、缓存，以及网站依赖和构建产物都不会入库。`cfg/config/VNL/deprecated/` 通过 `**` 隐式跟踪（保留历史参考）。
